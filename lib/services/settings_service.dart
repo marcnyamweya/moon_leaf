@@ -87,3 +87,4 @@ class SettingsService {
     await saveBrowseSettings(settings);
   }
 }
+

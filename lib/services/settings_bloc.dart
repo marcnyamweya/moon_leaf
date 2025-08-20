@@ -115,3 +115,4 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 }
+

@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:moon_leaf/database/novel_info.dart';
 
 
 enum DisplayModes {comfortable, compact, list}
 
-class LibraryNovelInfo {
-  final int novelId;
-  final String novelName;
-  final String novelCover;
-  final int sourceId;
-  final int? chaptersDownloaded;
-  final int? chaptersUnread;
+// class LibraryNovelInfo {
+//   final int novelId;
+//   final String novelName;
+//   final String novelCover;
+//   final int sourceId;
+//   final int? chaptersDownloaded;
+//   final int? chaptersUnread;
 
-  LibraryNovelInfo({
-    required this.novelId,
-    required this.novelName,
-    required this.novelCover,
-    required this.sourceId,
-    this.chaptersDownloaded,
-    this.chaptersUnread,
-  });
-}
+//   LibraryNovelInfo({
+//     required this.novelId,
+//     required this.novelName,
+//     required this.novelCover,
+//     required this.sourceId,
+//     this.chaptersDownloaded,
+//     this.chaptersUnread,
+//   });
+// }
 
 class SourceNovelItem {
   final int novelId;
