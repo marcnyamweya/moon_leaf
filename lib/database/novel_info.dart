@@ -1,3 +1,4 @@
+
 class NovelInfo {
   final int novelId;
   final String sourceUrl;
@@ -29,6 +30,19 @@ class NovelInfo {
     required this.categoryIds,
   });
 }
+class LibraryCategory {
+  final int id;
+  final String name;
+  final List<LibraryNovelInfo> novels;
+
+  LibraryCategory({
+    required this.id,
+    required this.name,
+    required this.novels,
+  });
+}
+
+
 
 class LibraryNovelInfo extends NovelInfo {
   final int? chaptersUnread;
@@ -52,6 +66,73 @@ class LibraryNovelInfo extends NovelInfo {
     this.chaptersDownloaded,
   });
 }
+
+// class Chapter extends Equatable {
+//   final String chapterId;
+//   final int read;
+//   final String title;
+
+//   const Chapter({
+//     required this.chapterId,
+//     required this.read,
+//     required this.title,
+//   });
+
+//   @override
+//   List<Object> get props => [chapterId, read, title];
+// }
+
+class ChapterItem {
+  final int chapterId;
+  final int novelId;
+  final String chapterUrl;
+  final String chapterName;
+  final String? releaseDate;
+  final int read;
+  final int bookmark;
+  final int downloaded;
+
+  ChapterItem({
+    required this.chapterId,
+    required this.novelId,
+    required this.chapterUrl,
+    required this.chapterName,
+    this.releaseDate,
+    required this.read,
+    required this.bookmark,
+    required this.downloaded,
+  });
+}
+
+class ChapterItemExtended extends ChapterItem {
+  final String novelUrl;
+  final int sourceId;
+  final String novelName;
+
+  ChapterItemExtended({
+    required int chapterId,
+    required int novelId,
+    required String chapterUrl,
+    required String chapterName,
+    String? releaseDate,
+    required int read,
+    required int bookmark,
+    required int downloaded,
+    required this.novelUrl,
+    required this.sourceId,
+    required this.novelName,
+  }) : super(
+          chapterId: chapterId,
+          novelId: novelId,
+          chapterUrl: chapterUrl,
+          chapterName: chapterName,
+          releaseDate: releaseDate,
+          read: read,
+          bookmark: bookmark,
+          downloaded: downloaded,
+        );
+}
+
 
 class Category {
   final int id;

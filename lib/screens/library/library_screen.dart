@@ -1,36 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-// // import 'package:moon_leaf/screens/browse/browse_screen.dart';
-
-// // final _router = GoRouter(
-// //   routes: [
-// //     GoRoute(path: '/browse', builder: (context, state) => const BrowseScreen()),
-// //     // Add more routes here
-// //   ],
-// // );
-// class LibraryScreen extends StatelessWidget {
-//   const LibraryScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Library'),
-//       ),
-//       body:  Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             context.go('/browse');
-//           },
-//           child: const Text('Library Screen'),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-// lib/screens/library/library_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:collection/collection.dart';
@@ -44,19 +11,106 @@ import 'components/librarybotttomsheet/library_bottom_bar.dart';
 import 'package:moon_leaf/screens/novel/components/set_categories_modal.dart';
 import './components/library_list_view.dart';
 import './components/banner.dart';
-// import '../../components/common/row.dart';
-// import './blocs/library_bloc.dart';
-// import './blocs/library_state.dart';
-// import './blocs/library_event.dart';
-// import '../../blocs/theme_bloc.dart';
-// import '../../blocs/search_bloc.dart';
-// import '../../blocs/settings_bloc.dart';
-// import '../../blocs/history_bloc.dart';
-// import '../../database/queries/chapter_queries.dart';
-// import '../../database/queries/novel_queries.dart';
-// import '../../utils/navigation_utils.dart';
-// import '../../utils/strings.dart';
-// import '../novel/components/set_categories_modal.dart';
+import 'package:moon_leaf/services/settings_bloc.dart';
+
+// Placeholder classes for missing functionality
+class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
+  ThemeBloc() : super(ThemeState(theme: AppTheme.fromName('Default'))) {
+    on<ThemeEvent>((event, emit) {});
+  }
+}
+
+class ThemeEvent {}
+
+class ThemeState {
+  final ThemeData theme;
+  ThemeState({required this.theme});
+}
+
+class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
+  LibraryBloc() : super(LibraryState()) {
+    on<LibraryEvent>((event, emit) {});
+  }
+}
+
+class LibraryEvent {}
+
+class LoadLibrary extends LibraryEvent {
+  final String searchText;
+  LoadLibrary({required this.searchText});
+}
+
+class RefetchLibrary extends LibraryEvent {}
+
+class LibraryState {
+  final List<LibraryCategory>? library;
+  final bool isLoading;
+  LibraryState({this.library, this.isLoading = false});
+}
+
+class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
+  HistoryBloc() : super(HistoryState()) {
+    on<HistoryEvent>((event, emit) {});
+  }
+}
+
+class HistoryEvent {}
+
+class LoadHistory extends HistoryEvent {}
+
+class HistoryState {
+  final List<dynamic> history;
+  final bool isLoading;
+  final String? error;
+  HistoryState({this.history = const [], this.isLoading = false, this.error});
+}
+
+// Extend SettingsState with missing properties
+extension SettingsStateExtension on SettingsState {
+  bool get downloadedOnlyMode => false; // Placeholder
+  bool get incognitoMode => false; // Placeholder
+  bool get showNumberOfNovels => false; // Placeholder
+  bool get useLibraryFAB => false; // Placeholder
+}
+
+// Placeholder utility classes
+class Strings {
+  static String get(String key) {
+    // Return placeholder strings
+    switch (key) {
+      case 'libraryScreen.searchbar':
+        return 'Search library';
+      case 'common.searchFor':
+        return 'Search for';
+      case 'common.globally':
+        return 'globally';
+      default:
+        return key;
+    }
+  }
+}
+
+class NavigationUtils {
+  static Map<String, dynamic> getChapterScreenRouteParams(dynamic history) {
+    return {'history': history};
+  }
+}
+
+class ChapterQueries {
+  static void markAllChaptersRead(int novelId) {
+    // Placeholder implementation
+  }
+  
+  static void markAllChaptersUnread(int novelId) {
+    // Placeholder implementation
+  }
+}
+
+class NovelQueries {
+  static void followNovel(int userId, int novelId) {
+    // Placeholder implementation
+  }
+}
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({Key? key}) : super(key: key);
@@ -175,7 +229,8 @@ class _LibraryScreenState extends State<LibraryScreen>
     for (var category in library) {
       for (var novel in category.novels) {
         if (selectedNovelIds.contains(novel.novelId)) {
-          categoryIds.add(novel.categoryIds.where((id) => id != 1).toList());
+          final categoryIdList = novel.categoryIds.split(',').map((id) => int.tryParse(id.trim()) ?? 0).where((id) => id != 1).toList();
+          categoryIds.add(categoryIdList);
         }
       }
     }
@@ -190,31 +245,27 @@ class _LibraryScreenState extends State<LibraryScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: MultiBlocBuilder(
-        builders: [
-          BlocBuilder<ThemeBloc, ThemeState>(
-            builder: (context, themeState) {
-              return BlocBuilder<SettingsBloc, SettingsState>(
-                builder: (context, settingsState) {
-                  return BlocBuilder<LibraryBloc, LibraryState>(
-                    builder: (context, libraryState) {
-                      return BlocBuilder<HistoryBloc, HistoryState>(
-                        builder: (context, historyState) {
-                          return _buildContent(
-                            themeState,
-                            settingsState,
-                            libraryState,
-                            historyState,
-                          );
-                        },
+      body: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, themeState) {
+          return BlocBuilder<SettingsBloc, SettingsState>(
+            builder: (context, settingsState) {
+              return BlocBuilder<LibraryBloc, LibraryState>(
+                builder: (context, libraryState) {
+                  return BlocBuilder<HistoryBloc, HistoryState>(
+                    builder: (context, historyState) {
+                      return _buildContent(
+                        themeState,
+                        settingsState,
+                        libraryState,
+                        historyState,
                       );
                     },
                   );
                 },
               );
             },
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -463,31 +514,7 @@ class _LibraryScreenState extends State<LibraryScreen>
   }
 }
 
-// Placeholder classes - implement these according to your needs
-
-class LibraryCategory {
-  final int id;
-  final String name;
-  final List<NovelInfo> novels;
-
-  LibraryCategory({
-    required this.id,
-    required this.name,
-    required this.novels,
-  });
-}
 
 
 
 
-// Add this to handle multiple BlocBuilders
-class MultiBlocBuilder extends StatelessWidget {
-  final List<Widget Function(BuildContext)> builders;
-
-  const MultiBlocBuilder({Key? key, required this.builders}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return builders.first(context);
-  }
-}
