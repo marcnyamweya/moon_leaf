@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:moon_leaf/providers/settings_provider.dart';
+import 'package:moon_leaf/services/settings_bloc.dart';
 
 class BottomNavigationShell extends StatefulWidget {
   final Widget child;
@@ -29,11 +29,10 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
       ),
     ];
 
-    // Access settings from the state properly
-    final showUpdatesTab = settingsState.settings['showUpdatesTab'] as bool? ?? true;
-    final showHistoryTab = settingsState.settings['showHistoryTab'] as bool? ?? true;
+    // TODO: Add showHistoryTab to SettingsState and SettingsService
+    const showHistoryTab = true;
 
-    if (showUpdatesTab) {
+    if (settingsState.showUpdatesTab) {
       tabs.add(NavigationTab(
         route: '/updates',
         icon: Icons.notifications_outlined,
@@ -90,7 +89,6 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
       builder: (context, settingsState) {
         final tabs = _getTabs(settingsState);
         final theme = Theme.of(context);
-        final showLabelsInNav = settingsState.settings['showLabelsInNav'] as bool? ?? false;
 
         return Scaffold(
           body: widget.child,
@@ -107,7 +105,7 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
             destinations: tabs.map((tab) {
               return NavigationDestination(
                 icon: Icon(tab.icon),
-                label: showLabelsInNav ? tab.label : '',
+                label: settingsState.showLabelsInNav ? tab.label : '',
               );
             }).toList(),
             backgroundColor: theme.colorScheme.surface,

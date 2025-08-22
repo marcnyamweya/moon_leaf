@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import './bottom_navigation_shell.dart';
-import 'package:moon_leaf/providers/settings_provider.dart';
+import 'package:moon_leaf/services/settings_bloc.dart';
 import 'package:moon_leaf/screens/library/library_screen.dart';
 import 'package:moon_leaf/screens/updates/updates_screen.dart';
 import 'package:moon_leaf/screens/history/history_screen.dart';

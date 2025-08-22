@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BrowseSettings {
@@ -53,6 +54,40 @@ class SettingsService {
   SettingsService._internal();
 
   static const String _browseSettingsKey = 'browse_settings';
+  static const _themeModeKey = 'theme_mode';
+  static const _showUpdatesTabKey = 'show_updates_tab';
+  static const _showLabelsInNavKey = 'show_labels_in_nav';
+
+  Future<ThemeMode> getThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    final themeModeIndex = prefs.getInt(_themeModeKey) ?? 0;
+    return ThemeMode.values[themeModeIndex];
+  }
+
+  Future<void> setThemeMode(ThemeMode themeMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_themeModeKey, themeMode.index);
+  }
+
+  Future<bool> getShowUpdatesTab() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_showUpdatesTabKey) ?? true;
+  }
+
+  Future<void> setShowUpdatesTab(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_showUpdatesTabKey, value);
+  }
+
+  Future<bool> getShowLabelsInNav() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_showLabelsInNavKey) ?? false;
+  }
+
+  Future<void> setShowLabelsInNav(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_showLabelsInNavKey, value);
+  }
 
   /// Get browse settings
   Future<BrowseSettings> getBrowseSettings() async {
